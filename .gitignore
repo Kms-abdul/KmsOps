@@ -2,4 +2,7 @@ node_modules/
 data/admin.json
 data/enquiries.json
 data/backups/
+uploads/
+.vercel/
+.env*
 *.tmp

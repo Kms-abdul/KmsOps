@@ -2,7 +2,9 @@
 
 Company website for KmsOps (SaaS applications, automation workflows, and tax / CA / HR / accounts / payroll services), with a built-in admin panel at **`/admin`**.
 
-There's no database. All content lives in JSON files, and uploaded images are saved in a folder.
+There's no database. Content is stored as JSON files and images as files:
+- **On Vercel:** stored in a private **Vercel Blob** store. This mode turns on automatically when `BLOB_READ_WRITE_TOKEN` is set.
+- **On your PC (`npm start`):** stored in the `data/` and `uploads/` folders.
 
 ## Run it
 
@@ -35,24 +37,37 @@ Changes go live when you press **Save & publish** (or Ctrl+S).
 ## Files
 
 ```
-server.js            Express server and admin API
-data/content.json    All website content (edited from /admin)
-data/admin.json      Admin login (hashed password), created on first run
-data/enquiries.json  Contact form messages
-data/backups/        Automatic content backups
-uploads/             Uploaded images
+server.js            Express server and admin API (exported for Vercel)
+storage.js           Saves data to Vercel Blob or to local files
+vercel.json          Routes /admin and /product/<slug> to their pages on Vercel
+data/content.json    Starting website content (used until the first publish)
 public/              Website, product page and admin panel (HTML/CSS/JS)
 ```
 
-## Deploying to kmsops.com
+Created when the site runs (in Blob on Vercel, or in these folders on your PC):
+`data/admin.json` (admin login with hashed password), `data/enquiries.json`, `data/backups/`, `uploads/`.
 
-You need any host that can run Node.js 18 or newer: a VPS, Render, Railway, Hostinger VPS, and so on.
+## Deploying to Vercel (kmsops.com)
 
-1. Copy the project to the server, then run `npm install --omit=dev`.
-2. Start it with `npm start` (or use `pm2 start server.js --name kmsops` to keep it running).
-3. Point the domain at the server and put it behind HTTPS (Nginx/Caddy reverse proxy to port 3000). Then `kmsops.com/admin` opens the admin login.
-4. **Back up the `data/` and `uploads/` folders.** They hold all your content.
+1. **Import the GitHub repo** in Vercel. Use Root Directory `./` and Application Preset **Express**.
+2. **Create the Blob store:** Vercel project → **Storage** → **Create** → **Blob**. Choose **Private** access and connect it to the project. This adds `BLOB_READ_WRITE_TOKEN` automatically.
+3. **Add environment variables** (Project → Settings → Environment Variables):
+   | Name | Value |
+   |---|---|
+   | `ADMIN_USER` | your admin username |
+   | `ADMIN_PASSWORD` | a strong password (only used to create the account the first time) |
+   | `SESSION_SECRET` | a long random string (e.g. 40+ random characters) |
+4. **Redeploy** so the new variables take effect.
+5. **Add your domain** under Project → Settings → Domains. After that, `kmsops.com/admin` opens the admin login.
 
-> Serverless or static hosts such as Vercel and Netlify **won't work** as-is, because the site writes content and images to disk. Use a host that has a persistent disk.
+Notes:
+- After **Save & publish**, the public site can take up to about a minute to show the change (Blob's CDN cache).
+- Each image upload is limited to 4 MB on Vercel. The admin panel shrinks large photos automatically before uploading.
+- Once the admin account exists, changing `ADMIN_PASSWORD` has no effect. Change the password in **Admin → Account** instead. To reset a forgotten password, delete `data/admin.json` from the Blob store (Storage → your store → Browse). The account is then created again from the environment variables.
+- Your content, images and backups live in the Blob store, not in GitHub. You can download them from the Storage tab.
+
+## Other hosts
+
+Any host that runs Node.js 20+ and has a permanent disk also works with no extra setup (VPS, Render, Railway): run `npm install --omit=dev`, then `npm start`. Back up the `data/` and `uploads/` folders.
 
 The sample testimonials in `content.json` are placeholders. Replace them with real customer quotes from the admin panel.

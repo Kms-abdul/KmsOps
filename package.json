@@ -8,9 +8,10 @@
     "dev": "node --watch server.js"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.2",
     "express": "^4.21.2",
     "multer": "^2.5.0"
   }

@@ -349,17 +349,40 @@
     return box;
   }
 
+  // Large photos are resized in the browser (max 2400px, re-encoded) so uploads
+  // stay fast and under the hosting request-size limit. GIF/SVG are left untouched.
+  const MAX_SIDE = 2400, SHRINK_OVER = 1.5 * 1024 * 1024;
+  async function shrinkImage(file) {
+    if (!/^image\/(jpeg|png|webp|avif)$/.test(file.type)) return file;
+    let bmp;
+    try { bmp = await createImageBitmap(file); } catch { return file; }
+    const scale = Math.min(1, MAX_SIDE / Math.max(bmp.width, bmp.height));
+    if (scale === 1 && file.size <= SHRINK_OVER) { bmp.close(); return file; }
+    const cv = document.createElement('canvas');
+    cv.width = Math.round(bmp.width * scale);
+    cv.height = Math.round(bmp.height * scale);
+    cv.getContext('2d').drawImage(bmp, 0, 0, cv.width, cv.height);
+    bmp.close();
+    const out = await new Promise(r => cv.toBlob(r, 'image/webp', 0.86));
+    if (!out || out.size >= file.size) return file;
+    return new File([out], file.name.replace(/\.\w+$/, '') + '.webp', { type: 'image/webp' });
+  }
+
   async function uploadFiles(files) {
     const list = [...files].filter(f => f.type.startsWith('image/'));
     if (!list.length) { toast('Please choose image files', true); return []; }
-    const fd = new FormData();
-    list.forEach(f => fd.append('images', f));
-    toast(`Uploading ${list.length} image${list.length > 1 ? 's' : ''}…`);
-    try {
-      const r = await api('/api/admin/upload', { method: 'POST', body: fd });
-      toast('Uploaded ✓');
-      return r.files;
-    } catch (err) { toast(err.message, true); return []; }
+    const urls = [];
+    for (const [i, original] of list.entries()) {
+      toast(`Uploading ${i + 1} of ${list.length}…`);
+      try {
+        const fd = new FormData();
+        fd.append('images', await shrinkImage(original));
+        const r = await api('/api/admin/upload', { method: 'POST', body: fd });
+        urls.push(...r.files);
+      } catch (err) { toast(`${original.name}: ${err.message}`, true); }
+    }
+    if (urls.length) toast(`Uploaded ${urls.length} image${urls.length > 1 ? 's' : ''} ✓`);
+    return urls;
   }
 
   function filePicker(multiple, cb) {
