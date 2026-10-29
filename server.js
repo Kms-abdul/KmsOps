@@ -330,6 +330,8 @@ app.use((req, res) => res.redirect('/'));
 app.use((err, req, res, next) => {
   console.error(err);
   if (err.status) return res.status(err.status).json({ error: err.message });
+  // Blob SDK errors carry no secrets and explain storage problems (permissions, store setup)
+  if (/^Blob|Vercel Blob/.test(`${err.name} ${err.message}`)) return res.status(502).json({ error: `Storage error: ${err.message}` });
   res.status(500).json({ error: 'Something went wrong on the server. Please try again.' });
 });
 
