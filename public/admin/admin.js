@@ -150,6 +150,7 @@
     { title: 'Brand', desc: 'Name and logo shown across the site.', fields: [
       { k: 'brand', label: 'Company name' },
       { k: 'brandFull', label: 'Full name (under the logo)', hint: 'e.g. Key Management Solutions — leave empty to hide' },
+      { k: 'brandMotto', label: 'Motto (footer)', hint: 'Separate words with • e.g. Build • Automate • Operate' },
       { k: 'tagline', label: 'Tagline', full: true },
       { k: 'logoImage', label: 'Logo image (optional — replaces the generated logo)', type: 'image', full: true },
       { k: 'announcement', label: 'Announcement bar', full: true, hint: 'Leave empty to hide the top bar' }

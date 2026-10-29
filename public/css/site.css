@@ -95,7 +95,12 @@ h2 em, h1 em { font-style: normal; }
 .logo-mark { width: 46px; height: 46px; flex: none; filter: drop-shadow(0 4px 8px rgba(34, 42, 68, .18)); transition: transform .5s var(--ease); }
 .logo:hover .logo-mark { transform: rotate(-8deg) scale(1.06); }
 .logo-text { display: flex; flex-direction: column; line-height: 1.05; }
-.logo-text b { font-weight: 800; }
+.logo-text b { font-weight: 800; color: #12204A; }
+.brand-hl { background: linear-gradient(135deg, #1D6FE0, #2FA4F5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.motto { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 14px 0 6px; font-size: .74rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
+.motto span { display: inline-flex; align-items: center; gap: 14px; }
+.motto span + span::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #F7931E; }
+.motto span:nth-child(3)::before { background: #3CC08A; }
 .logo-text small { font-family: var(--font); font-size: .62rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 3px; }
 .nav-links { display: flex; gap: 6px; margin-left: auto; }
 .nav-links a { padding: .5em .9em; border-radius: 999px; font-weight: 500; color: var(--ink-2); transition: background .2s, color .2s; }

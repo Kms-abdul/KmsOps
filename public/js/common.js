@@ -26,16 +26,26 @@ const KMS = (() => {
     }
   }
 
+  // "KMS Ops" -> "KMS" in ink + "Ops" in brand blue
+  const brandHtml = brand => {
+    const i = brand.lastIndexOf(' ');
+    return i > 0 ? `${esc(brand.slice(0, i))} <span class="brand-hl">${esc(brand.slice(i + 1))}</span>` : esc(brand);
+  };
+
   function renderBrand(s) {
-    const brand = s.brand || 'KmsOps';
+    const brand = s.brand || 'KMS Ops';
     const full = s.brandFull ?? 'Key Management Solutions';
+    const motto = (s.brandMotto ?? 'Build • Automate • Operate').split('•').map(x => x.trim()).filter(Boolean);
     $$('.logo').forEach(logo => {
       logo.innerHTML = s.logoImage
         ? `<img src="${safeUrl(s.logoImage)}" alt="${esc(brand)}">`
-        : `<img class="logo-mark" src="/img/logo-mark.svg" alt=""><span class="logo-text"><b data-brand></b>${full ? '<small data-brand-full></small>' : ''}</span>`;
+        : `<img class="logo-mark" src="/img/logo-mark.svg" alt=""><span class="logo-text"><b>${brandHtml(brand)}</b>${full ? `<small>${esc(full)}</small>` : ''}</span>`;
     });
     $$('[data-brand]').forEach(el => (el.textContent = brand));
-    $$('[data-brand-full]').forEach(el => (el.textContent = full));
+    $$('[data-motto]').forEach(el => {
+      el.innerHTML = motto.map(m => `<span>${esc(m)}</span>`).join('');
+      el.hidden = !motto.length;
+    });
   }
 
   function renderFooter(c) {
