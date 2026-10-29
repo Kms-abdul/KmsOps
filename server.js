@@ -165,7 +165,7 @@ app.get('/api/health', (req, res) => {
 
 // Public content (hidden items filtered out)
 app.get('/api/content', a(async (req, res) => {
-  const c = await store.readJson('content.json', {}, { fresh: false });
+  const c = await store.readJson('content.json', {});
   const visible = arr => (Array.isArray(arr) ? arr.filter(x => x.visible !== false) : []);
   const byOrder = arr => arr.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
   res.setHeader('Cache-Control', 'no-store');

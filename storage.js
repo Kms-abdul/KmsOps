@@ -121,28 +121,49 @@ function blobDriver() {
     return out;
   }
 
-  async function readText(pathname, fresh) {
-    const r = await blob.get(pathname, { access: ACCESS, useCache: !fresh });
+  // Every path we read is written once and never overwritten, so CDN-cached
+  // reads are always correct. (Uncached private reads are rejected by stores
+  // connected through OIDC, so we never rely on them.)
+  async function readText(pathname) {
+    const r = await blob.get(pathname, { access: ACCESS });
     if (!r || !r.stream) return null;
     return new Response(r.stream).text();
   }
 
+  // JSON documents are versioned: data/<doc>/<time>-<rand>.json. A write adds a
+  // new version; a read lists the folder (always current) and takes the newest.
+  const KEEP_VERSIONS = 3;
+  const docPrefix = name => `data/${name.replace(/\.json$/, '')}/`;
+  const byPath = (a, b) => a.pathname.localeCompare(b.pathname);
+
+  async function latestDoc(name) {
+    const versions = (await listAll(docPrefix(name))).sort(byPath);
+    return versions.length ? versions[versions.length - 1].pathname : null;
+  }
+
+  async function readDocText(name) {
+    const latest = await latestDoc(name);
+    return latest ? readText(latest) : null;
+  }
+
   return {
     kind: 'blob',
-    // fresh=false lets public reads use the CDN cache (may lag a publish by up to ~60s)
-    async readJson(name, fallback, { fresh = true } = {}) {
-      const text = await readText(`data/${name}`, fresh);
+    async readJson(name, fallback) {
+      const text = await readDocText(name);
       if (text == null) return seedFor(name, fallback);
       try { return JSON.parse(text); } catch { return seedFor(name, fallback); }
     },
     async writeJson(name, data) {
-      await blob.put(`data/${name}`, JSON.stringify(data, null, 2), {
-        access: ACCESS, addRandomSuffix: false, allowOverwrite: true,
-        contentType: 'application/json', cacheControlMaxAge: 60
+      const stamp = Date.now().toString().padStart(15, '0');
+      await blob.put(`${docPrefix(name)}${stamp}-${Math.random().toString(36).slice(2, 8)}.json`, JSON.stringify(data, null, 2), {
+        access: ACCESS, addRandomSuffix: false, contentType: 'application/json'
       });
+      const versions = (await listAll(docPrefix(name))).sort(byPath);
+      const old = versions.slice(0, Math.max(0, versions.length - KEEP_VERSIONS));
+      if (old.length) await blob.del(old.map(b => b.url)).catch(() => {});
     },
     async backupContent() {
-      const current = await readText('data/content.json', true);
+      const current = await readDocText('content.json');
       if (current == null) return;
       const stamp = new Date().toISOString().replace(/[:.]/g, '-');
       await blob.put(`data/backups/content-${stamp}.json`, current, {
@@ -156,7 +177,7 @@ function blobDriver() {
       return (await listAll('data/backups/content-')).map(b => b.pathname.split('/').pop()).sort().reverse();
     },
     async readBackup(name) {
-      const text = await readText(`data/backups/${name}`, true);
+      const text = await readText(`data/backups/${name}`);
       try { return text == null ? null : JSON.parse(text); } catch { return null; }
     },
     async saveUpload(name, buffer, contentType) {

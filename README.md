@@ -45,7 +45,7 @@ public/              Website, product page and admin panel (HTML/CSS/JS)
 ```
 
 Created when the site runs (in Blob on Vercel, or in these folders on your PC):
-`data/admin.json` (admin login with hashed password), `data/enquiries.json`, `data/backups/`, `uploads/`.
+`data/admin` (admin login with hashed password), `data/enquiries`, `data/backups/`, `uploads/`. On Vercel each of `content`, `admin` and `enquiries` is a folder holding the latest few saved versions.
 
 ## Deploying to Vercel (kmsops.com)
 
@@ -61,9 +61,8 @@ Created when the site runs (in Blob on Vercel, or in these folders on your PC):
 5. **Add your domain** under Project → Settings → Domains. After that, `kmsops.com/admin` opens the admin login.
 
 Notes:
-- After **Save & publish**, the public site can take up to about a minute to show the change (Blob's CDN cache).
 - Each image upload is limited to 4 MB on Vercel. The admin panel shrinks large photos automatically before uploading.
-- Once the admin account exists, changing `ADMIN_PASSWORD` has no effect. Change the password in **Admin → Account** instead. To reset a forgotten password, delete `data/admin.json` from the Blob store (Storage → your store → Browse). The account is then created again from the environment variables.
+- Once the admin account exists, changing `ADMIN_PASSWORD` has no effect. Change the password in **Admin → Account** instead. To reset a forgotten password, delete the `data/admin/` folder from the Blob store (Storage → your store → Browse). The account is then created again from the environment variables.
 - Your content, images and backups live in the Blob store, not in GitHub. You can download them from the Storage tab.
 
 ## Other hosts
