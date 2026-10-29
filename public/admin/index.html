@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin — KmsOps</title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <!-- Login -->
+  <section class="login" id="loginView" hidden>
+    <div class="login-art" aria-hidden="true"><span></span><span></span><span></span></div>
+    <form class="login-card" id="loginForm">
+      <div class="brand"><span class="mark"></span><b>KmsOps</b><small>Admin</small></div>
+      <h1>Welcome back</h1>
+      <p class="muted">Sign in to manage your website content.</p>
+      <label>Username<input name="username" autocomplete="username" required autofocus></label>
+      <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="btn primary block" type="submit">Sign in</button>
+      <p class="err" id="loginErr" role="alert"></p>
+      <a href="/" class="muted small">← Back to website</a>
+    </form>
+  </section>
+
+  <!-- App -->
+  <div class="app" id="appView" hidden>
+    <aside class="side" id="side">
+      <div class="brand"><span class="mark"></span><b>KmsOps</b><small>Admin</small></div>
+      <nav id="sideNav"></nav>
+      <div class="side-foot">
+        <a href="/" target="_blank" class="side-link">↗ View website</a>
+        <button class="side-link" id="logoutBtn">⎋ Sign out</button>
+      </div>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="icon-btn menu" id="menuBtn" aria-label="Menu">☰</button>
+        <h2 id="pageTitle">Dashboard</h2>
+        <div class="top-actions">
+          <span class="dirty" id="dirtyBadge" hidden>● Unsaved changes</span>
+          <button class="btn ghost" id="discardBtn" hidden>Discard</button>
+          <button class="btn primary" id="saveBtn" disabled>Save & publish</button>
+        </div>
+      </header>
+      <div class="content" id="view"></div>
+    </div>
+  </div>
+
+  <!-- Drawer for editing an item -->
+  <div class="drawer-wrap" id="drawerWrap" hidden>
+    <div class="drawer" id="drawer" role="dialog" aria-modal="true">
+      <header><h3 id="drawerTitle"></h3><button class="icon-btn" id="drawerClose" aria-label="Close">×</button></header>
+      <div class="drawer-body" id="drawerBody"></div>
+      <footer><button class="btn primary" id="drawerDone">Done</button></footer>
+    </div>
+  </div>
+
+  <!-- Media picker -->
+  <div class="modal-wrap" id="mediaWrap" hidden>
+    <div class="modal">
+      <header><h3>Media library</h3><button class="icon-btn" id="mediaClose" aria-label="Close">×</button></header>
+      <div class="modal-body">
+        <label class="dropzone" id="mediaDrop">
+          <input type="file" accept="image/*" multiple hidden id="mediaInput">
+          <b>Drop images here</b> or click to upload <small>JPG, PNG, WebP, GIF, SVG · max 10 MB each</small>
+        </label>
+        <div class="media-grid" id="mediaGrid"></div>
+      </div>
+      <footer><span class="muted" id="mediaHint"></span><button class="btn primary" id="mediaUse" disabled>Use selected</button></footer>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="/admin/admin.js"></script>
+</body>
+</html>

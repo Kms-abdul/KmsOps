@@ -1,0 +1,457 @@
+{
+  "settings": {
+    "brand": "KmsOps",
+    "logoImage": "",
+    "tagline": "Operations, automated.",
+    "announcement": "New: Kitchorea 2.0 — QR ordering & kitchen display for restaurants",
+    "heroEyebrow": "SaaS · Automation · Business Services",
+    "heroTitle": "Run your entire business",
+    "heroHighlight": "on autopilot.",
+    "heroSubtitle": "Ready-to-use SaaS applications, smart automation workflows and expert finance & HR services for schools, restaurants, retailers and growing businesses — all under one roof.",
+    "heroCtaPrimary": "Explore Applications",
+    "heroCtaSecondary": "Talk to an Expert",
+    "email": "hello@kmsops.com",
+    "phone": "+91 90000 00000",
+    "whatsapp": "919000000000",
+    "address": "India",
+    "footerNote": "KmsOps builds software and services that keep businesses running smoothly.",
+    "social": {
+      "linkedin": "",
+      "instagram": "",
+      "twitter": "",
+      "facebook": "",
+      "youtube": ""
+    },
+    "theme": {
+      "primary": "#4F5BD5",
+      "secondary": "#14A3A3",
+      "accent": "#F2785C"
+    },
+    "sections": {
+      "products": true,
+      "services": true,
+      "industries": true,
+      "workflows": true,
+      "process": true,
+      "testimonials": true,
+      "faqs": true,
+      "contact": true
+    }
+  },
+  "stats": [
+    {
+      "id": "st1",
+      "value": "500",
+      "suffix": "+",
+      "label": "Businesses served",
+      "order": 1
+    },
+    {
+      "id": "st2",
+      "value": "12",
+      "suffix": "",
+      "label": "SaaS applications",
+      "order": 2
+    },
+    {
+      "id": "st3",
+      "value": "40",
+      "suffix": "k+",
+      "label": "Hours automated monthly",
+      "order": 3
+    },
+    {
+      "id": "st4",
+      "value": "99.9",
+      "suffix": "%",
+      "label": "Platform uptime",
+      "order": 4
+    }
+  ],
+  "products": [
+    {
+      "id": "p-kitchorea",
+      "slug": "kitchorea",
+      "name": "Kitchorea",
+      "category": "Restaurant",
+      "badge": "Popular",
+      "icon": "🍽️",
+      "tagline": "The complete restaurant operating system.",
+      "description": "Kitchorea brings your restaurant's front of house, kitchen and back office together. Take orders by QR, waiter app or counter, push them instantly to the kitchen display, manage tables, track recipes and stock, and see your sales live from anywhere.",
+      "features": [
+        "QR table ordering & digital menu",
+        "Kitchen Display System (KDS)",
+        "Billing, GST invoices & split bills",
+        "Table & reservation management",
+        "Recipe-level inventory tracking",
+        "Live sales dashboard & reports"
+      ],
+      "accent": "#F2785C",
+      "coverImage": "",
+      "gallery": [],
+      "demoLink": "",
+      "visible": true,
+      "order": 1
+    },
+    {
+      "id": "p-campus",
+      "slug": "campusone",
+      "name": "CampusOne",
+      "category": "Education",
+      "badge": "",
+      "icon": "🎓",
+      "tagline": "School management, simplified.",
+      "description": "CampusOne manages admissions, attendance, fees, exams, timetables and parent communication in a single platform — with mobile apps for teachers and parents.",
+      "features": [
+        "Online admissions & student records",
+        "Fee collection with auto reminders",
+        "Attendance, exams & report cards",
+        "Timetable & staff management",
+        "Parent app with notices & homework",
+        "Transport and library modules"
+      ],
+      "accent": "#4F5BD5",
+      "coverImage": "",
+      "gallery": [],
+      "demoLink": "",
+      "visible": true,
+      "order": 2
+    },
+    {
+      "id": "p-stock",
+      "slug": "stockpilot",
+      "name": "StockPilot",
+      "category": "Inventory",
+      "badge": "New",
+      "icon": "📦",
+      "tagline": "Inventory that refills itself.",
+      "description": "StockPilot tracks stock across stores and warehouses in real time, raises purchase orders automatically when items run low, and gives you barcode-driven receiving, transfers and audits.",
+      "features": [
+        "Multi-location stock tracking",
+        "Barcode & QR scanning",
+        "Auto re-order & purchase orders",
+        "Batch, expiry & serial tracking",
+        "Supplier management",
+        "Stock valuation reports"
+      ],
+      "accent": "#14A3A3",
+      "coverImage": "",
+      "gallery": [],
+      "demoLink": "",
+      "visible": true,
+      "order": 3
+    },
+    {
+      "id": "p-payroll",
+      "slug": "peoplehub",
+      "name": "PeopleHub",
+      "category": "HR & Payroll",
+      "badge": "",
+      "icon": "👥",
+      "tagline": "HR and payroll in one click.",
+      "description": "PeopleHub handles onboarding, attendance, leave, and fully compliant payroll with PF, ESI, PT and TDS — and gives employees a self-service portal for payslips and requests.",
+      "features": [
+        "Attendance & leave with mobile check-in",
+        "One-click payroll processing",
+        "PF, ESI, PT & TDS compliance",
+        "Employee self-service portal",
+        "Expense claims & approvals",
+        "Payslips & Form 16 generation"
+      ],
+      "accent": "#8A63D2",
+      "coverImage": "",
+      "gallery": [],
+      "demoLink": "",
+      "visible": true,
+      "order": 4
+    }
+  ],
+  "services": [
+    {
+      "id": "s-itr",
+      "title": "Income Tax Filing",
+      "icon": "🧾",
+      "summary": "Accurate ITR filing for individuals, professionals and businesses — with maximum eligible savings.",
+      "features": [
+        "ITR 1 to 7",
+        "Tax planning",
+        "Notice handling",
+        "Refund tracking"
+      ],
+      "visible": true,
+      "order": 1
+    },
+    {
+      "id": "s-ca",
+      "title": "Chartered Accountant Services",
+      "icon": "📊",
+      "summary": "Audits, certifications and advisory from experienced chartered accountants.",
+      "features": [
+        "Statutory & tax audit",
+        "Certifications",
+        "Financial advisory",
+        "Project reports"
+      ],
+      "visible": true,
+      "order": 2
+    },
+    {
+      "id": "s-gst",
+      "title": "GST & Compliance",
+      "icon": "🏛️",
+      "summary": "Registration, monthly returns and reconciliation so you never miss a deadline.",
+      "features": [
+        "GST registration",
+        "GSTR filing",
+        "E-invoicing",
+        "ROC compliance"
+      ],
+      "visible": true,
+      "order": 3
+    },
+    {
+      "id": "s-accounts",
+      "title": "Accounting & Bookkeeping",
+      "icon": "📒",
+      "summary": "Clean, up-to-date books with monthly MIS reports you can actually use.",
+      "features": [
+        "Bookkeeping",
+        "Bank reconciliation",
+        "MIS reports",
+        "Year-end closing"
+      ],
+      "visible": true,
+      "order": 4
+    },
+    {
+      "id": "s-payroll",
+      "title": "Payroll Management",
+      "icon": "💳",
+      "summary": "End-to-end payroll processing with statutory compliance handled for you.",
+      "features": [
+        "Salary processing",
+        "PF / ESI / PT",
+        "TDS & Form 16",
+        "Payslips"
+      ],
+      "visible": true,
+      "order": 5
+    },
+    {
+      "id": "s-hr",
+      "title": "HR Services",
+      "icon": "🤝",
+      "summary": "Hiring support, HR policies, onboarding and employee lifecycle management.",
+      "features": [
+        "Recruitment support",
+        "HR policies",
+        "Onboarding",
+        "Performance reviews"
+      ],
+      "visible": true,
+      "order": 6
+    }
+  ],
+  "industries": [
+    {
+      "id": "i1",
+      "name": "Schools & Colleges",
+      "icon": "🏫",
+      "description": "Admissions, fees, attendance and parent communication on autopilot.",
+      "image": "",
+      "visible": true,
+      "order": 1
+    },
+    {
+      "id": "i2",
+      "name": "Restaurants & Cafés",
+      "icon": "🍜",
+      "description": "Faster orders, smarter kitchens and zero stock surprises.",
+      "image": "",
+      "visible": true,
+      "order": 2
+    },
+    {
+      "id": "i3",
+      "name": "Retail & Inventory",
+      "icon": "🛒",
+      "description": "Real-time stock, billing and automatic re-ordering across stores.",
+      "image": "",
+      "visible": true,
+      "order": 3
+    },
+    {
+      "id": "i4",
+      "name": "Clinics & Healthcare",
+      "icon": "🩺",
+      "description": "Appointments, records and billing with patient reminders.",
+      "image": "",
+      "visible": true,
+      "order": 4
+    },
+    {
+      "id": "i5",
+      "name": "Manufacturing",
+      "icon": "🏭",
+      "description": "Production planning, materials and dispatch in one view.",
+      "image": "",
+      "visible": true,
+      "order": 5
+    },
+    {
+      "id": "i6",
+      "name": "Startups & SMEs",
+      "icon": "🚀",
+      "description": "Finance, HR and compliance handled so you can focus on growth.",
+      "image": "",
+      "visible": true,
+      "order": 6
+    }
+  ],
+  "workflows": [
+    {
+      "id": "w1",
+      "title": "Fee reminders",
+      "icon": "🔔",
+      "description": "Automatic WhatsApp & SMS reminders before and after due dates, with payment links.",
+      "steps": [
+        "Due date nears",
+        "Reminder sent",
+        "Parent pays",
+        "Receipt issued"
+      ],
+      "visible": true,
+      "order": 1
+    },
+    {
+      "id": "w2",
+      "title": "Low-stock re-order",
+      "icon": "🔁",
+      "description": "When stock falls below the threshold, a purchase order is raised and emailed to the supplier.",
+      "steps": [
+        "Stock drops",
+        "PO created",
+        "Supplier notified",
+        "Stock received"
+      ],
+      "visible": true,
+      "order": 2
+    },
+    {
+      "id": "w3",
+      "title": "Attendance to payroll",
+      "icon": "⏱️",
+      "description": "Attendance and leave flow straight into payroll — salaries computed and payslips sent.",
+      "steps": [
+        "Check-in",
+        "Leave synced",
+        "Payroll run",
+        "Payslip mailed"
+      ],
+      "visible": true,
+      "order": 3
+    },
+    {
+      "id": "w4",
+      "title": "Invoice processing",
+      "icon": "📨",
+      "description": "Bills received by email are read, verified and posted to your books automatically.",
+      "steps": [
+        "Invoice emailed",
+        "Data extracted",
+        "Approved",
+        "Booked"
+      ],
+      "visible": true,
+      "order": 4
+    }
+  ],
+  "process": [
+    {
+      "id": "pr1",
+      "title": "Discover",
+      "text": "We understand how your business runs today and where time is lost.",
+      "order": 1
+    },
+    {
+      "id": "pr2",
+      "title": "Configure",
+      "text": "We set up the right applications and workflows with your data.",
+      "order": 2
+    },
+    {
+      "id": "pr3",
+      "title": "Go live",
+      "text": "Your team is trained and the system goes live — usually within days.",
+      "order": 3
+    },
+    {
+      "id": "pr4",
+      "title": "Grow",
+      "text": "Ongoing support, new automations and expert services as you scale.",
+      "order": 4
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "t1",
+      "name": "Restaurant owner",
+      "role": "Owner",
+      "company": "Sample testimonial",
+      "quote": "Orders reach the kitchen instantly and our billing errors are gone. Replace this with a real customer quote from the admin panel.",
+      "avatar": "",
+      "visible": true,
+      "order": 1
+    },
+    {
+      "id": "t2",
+      "name": "School principal",
+      "role": "Principal",
+      "company": "Sample testimonial",
+      "quote": "Fee collection and parent communication used to take days. Now it simply happens. Replace this with a real quote.",
+      "avatar": "",
+      "visible": true,
+      "order": 2
+    },
+    {
+      "id": "t3",
+      "name": "Retail manager",
+      "role": "Operations",
+      "company": "Sample testimonial",
+      "quote": "We stopped running out of fast-moving items the week we went live. Replace this with a real quote.",
+      "avatar": "",
+      "visible": true,
+      "order": 3
+    }
+  ],
+  "faqs": [
+    {
+      "id": "f1",
+      "q": "How long does it take to get started?",
+      "a": "Most businesses are live within 3–10 days, depending on data migration and the modules chosen.",
+      "visible": true,
+      "order": 1
+    },
+    {
+      "id": "f2",
+      "q": "Can the applications be customised for my business?",
+      "a": "Yes. Every application can be configured, and we build custom modules and workflows on request.",
+      "visible": true,
+      "order": 2
+    },
+    {
+      "id": "f3",
+      "q": "Do you provide tax and accounting services separately?",
+      "a": "Yes. Income tax filing, CA, GST, accounting, HR and payroll services are available on their own or bundled with our software.",
+      "visible": true,
+      "order": 3
+    },
+    {
+      "id": "f4",
+      "q": "Is my data secure?",
+      "a": "Data is encrypted in transit, backed up daily and access is controlled by role.",
+      "visible": true,
+      "order": 4
+    }
+  ]
+}
