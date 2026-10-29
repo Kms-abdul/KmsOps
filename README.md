@@ -24,7 +24,7 @@ To pick your own login before the first start, set the environment variables `AD
 
 | Section | What you can do |
 |---|---|
-| Site settings | Brand name, logo, announcement bar, hero text and buttons, theme colours, contact details, WhatsApp, social links, and turning whole sections on or off |
+| Site settings | Brand name, logo, hero text and buttons, theme colours, contact details, WhatsApp, social links, and turning whole sections on or off |
 | Applications | Add a SaaS product (e.g. Kitchorea): name, category, icon, colour, features, cover image, **screenshot gallery** and demo link. Each product gets its own page at `/product/<slug>` |
 | Business services | Income tax, CA, GST, accounts, payroll, HR, and so on |
 | Industries / Workflows / How we work / Numbers / Testimonials / FAQs | Add, edit, reorder, hide, duplicate or delete items |

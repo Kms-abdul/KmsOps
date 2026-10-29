@@ -22,12 +22,6 @@
   });
   $$('#navLinks a').forEach(a => { if (!document.querySelector(a.getAttribute('href'))) a.remove(); });
 
-  // ---------- Announcement ----------
-  if (s.announcement) {
-    $('#announceText').textContent = s.announcement;
-    $('#announce').hidden = false;
-  }
-
   // ---------- Hero ----------
   $('#heroEyebrow').textContent = s.heroEyebrow || '';
   $('#heroEyebrow').hidden = !s.heroEyebrow;

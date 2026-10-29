@@ -113,6 +113,19 @@ const KMS = (() => {
     const burger = $('#burger');
     burger?.addEventListener('click', () => nav.classList.toggle('open'));
     $$('#navLinks a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+    // Highlight the menu item for the section currently on screen
+    const links = $$('#navLinks a[href^="#"]');
+    if (!links.length || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(entries => entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${en.target.id}`));
+    }), { rootMargin: '-45% 0px -50% 0px' });
+    // the hero (#top) is watched too, so scrolling back up clears the highlight
+    const watch = () => ['#top', ...links.map(a => a.getAttribute('href'))].forEach(h => { const sec = document.querySelector(h); if (sec) io.observe(sec); });
+    // sections are filled in after content loads
+    addEventListener('load', watch);
+    setTimeout(watch, 1500);
   }
 
   return { esc, safeUrl, color, $, $$, reducedMotion, loadContent, applyTheme, renderBrand, renderFooter, mockup, tilt, reveal, navBehaviour };
