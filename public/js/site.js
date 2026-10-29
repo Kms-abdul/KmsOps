@@ -14,7 +14,7 @@
   const sections = s.sections || {};
   KMS.applyTheme(s);
   KMS.renderBrand(s);
-  if (s.brand) document.title = `${s.brand} — ${s.tagline || 'SaaS, Automation & Business Services'}`;
+  if (s.brand) document.title = `${s.brand} — ${s.brandFull || s.tagline || 'Key Management Solutions'}`;
 
   // Hide sections switched off in admin (or with no content)
   $$('[data-section]').forEach(sec => {

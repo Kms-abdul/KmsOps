@@ -28,12 +28,14 @@ const KMS = (() => {
 
   function renderBrand(s) {
     const brand = s.brand || 'KmsOps';
-    $$('[data-brand]').forEach(el => (el.textContent = brand));
+    const full = s.brandFull ?? 'Key Management Solutions';
     $$('.logo').forEach(logo => {
       logo.innerHTML = s.logoImage
         ? `<img src="${safeUrl(s.logoImage)}" alt="${esc(brand)}">`
-        : `<span class="logo-mark"></span><span class="logo-text">${esc(brand)}</span>`;
+        : `<img class="logo-mark" src="/img/logo-mark.svg" alt=""><span class="logo-text"><b data-brand></b>${full ? '<small data-brand-full></small>' : ''}</span>`;
     });
+    $$('[data-brand]').forEach(el => (el.textContent = brand));
+    $$('[data-brand-full]').forEach(el => (el.textContent = full));
   }
 
   function renderFooter(c) {

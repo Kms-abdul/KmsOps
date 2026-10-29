@@ -1,8 +1,9 @@
 {
   "settings": {
     "brand": "KmsOps",
+    "brandFull": "Key Management Solutions",
     "logoImage": "",
-    "tagline": "Operations, automated.",
+    "tagline": "One partner for software, automation and business services.",
     "announcement": "New: Kitchorea 2.0 — QR ordering & kitchen display for restaurants",
     "heroEyebrow": "SaaS · Automation · Business Services",
     "heroTitle": "Run your entire business",
@@ -14,7 +15,7 @@
     "phone": "+91 90000 00000",
     "whatsapp": "919000000000",
     "address": "India",
-    "footerNote": "KmsOps builds software and services that keep businesses running smoothly.",
+    "footerNote": "KmsOps — Key Management Solutions. Software, automation and expert business services that keep every kind of organisation running smoothly.",
     "social": {
       "linkedin": "",
       "instagram": "",

@@ -92,9 +92,11 @@ h2 em, h1 em { font-style: normal; }
 .nav-inner { display: flex; align-items: center; gap: 28px; height: 74px; }
 .logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; letter-spacing: -.03em; }
 .logo img { height: 36px; width: auto; }
-.logo-mark { width: 34px; height: 34px; border-radius: 10px; position: relative; transform: perspective(200px) rotateX(18deg) rotateY(-18deg);
-  background: linear-gradient(135deg, var(--primary), var(--secondary)); box-shadow: 4px 6px 0 color-mix(in srgb, var(--accent) 80%, transparent), var(--shadow-1); }
-.logo-mark::after { content: ''; position: absolute; inset: 9px; border-radius: 4px; border: 2.5px solid rgba(255,255,255,.9); border-right-color: transparent; }
+.logo-mark { width: 46px; height: 46px; flex: none; filter: drop-shadow(0 4px 8px rgba(34, 42, 68, .18)); transition: transform .5s var(--ease); }
+.logo:hover .logo-mark { transform: rotate(-8deg) scale(1.06); }
+.logo-text { display: flex; flex-direction: column; line-height: 1.05; }
+.logo-text b { font-weight: 800; }
+.logo-text small { font-family: var(--font); font-size: .62rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 3px; }
 .nav-links { display: flex; gap: 6px; margin-left: auto; }
 .nav-links a { padding: .5em .9em; border-radius: 999px; font-weight: 500; color: var(--ink-2); transition: background .2s, color .2s; }
 .nav-links a:hover { background: rgba(79, 91, 213, .1); color: var(--primary); }
