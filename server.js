@@ -149,6 +149,19 @@ app.use((req, res, next) => {
   next();
 });
 
+// Setup check — shows which storage is active, never any secrets
+app.get('/api/health', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.json({
+    ok: true,
+    storage: store.kind,
+    vercel: ON_VERCEL,
+    adminUserSet: !!process.env.ADMIN_USER,
+    adminPasswordSet: !!process.env.ADMIN_PASSWORD,
+    sessionSecretSet: !!process.env.SESSION_SECRET
+  });
+});
+
 // Public content (hidden items filtered out)
 app.get('/api/content', a(async (req, res) => {
   const c = await store.readJson('content.json', {}, { fresh: false });
@@ -315,6 +328,7 @@ app.use((req, res) => res.redirect('/'));
 
 app.use((err, req, res, next) => {
   console.error(err);
+  if (err.status) return res.status(err.status).json({ error: err.message });
   res.status(500).json({ error: 'Something went wrong on the server. Please try again.' });
 });
 

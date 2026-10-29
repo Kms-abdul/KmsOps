@@ -13,13 +13,30 @@ const { Readable } = require('stream');
 const MAX_BACKUPS = 30;
 const SEED_CONTENT = path.join(__dirname, 'data', 'content.json');
 const USE_BLOB = !!process.env.BLOB_READ_WRITE_TOKEN;
+const NOT_CONFIGURED = 'Storage is not set up yet. In Vercel open Storage → Create → Blob (Private), connect it to this project, then redeploy.';
 
 function seedFor(name, fallback) {
   // content.json in the repo is the starting content until the first publish
   if (name === 'content.json') {
-    try { return JSON.parse(fs.readFileSync(SEED_CONTENT, 'utf8')); } catch { /* ignore */ }
+    try { return JSON.parse(fs.readFileSync(SEED_CONTENT, 'utf8')); } catch { /* fall through */ }
+    try { return require('./data/content.json'); } catch { /* ignore */ }
   }
   return fallback;
+}
+
+// ---------------- Read-only driver ----------------
+// Used on Vercel before a Blob store is connected: the public site still works
+// from the repo's content.json, and every write explains what to set up.
+function readOnlyDriver() {
+  const fail = async () => { const e = new Error(NOT_CONFIGURED); e.status = 503; throw e; };
+  return {
+    kind: 'not-configured',
+    async readJson(name, fallback) { return seedFor(name, fallback); },
+    writeJson: fail, backupContent: fail, saveUpload: fail, deleteUpload: fail, readBackup: fail,
+    async listBackups() { return []; },
+    async listUploads() { return []; },
+    async streamUpload() { return false; }
+  };
 }
 
 // ---------------- Local file driver ----------------
@@ -155,4 +172,14 @@ function blobDriver() {
   };
 }
 
-module.exports = USE_BLOB ? blobDriver() : localDriver();
+function pickDriver() {
+  if (USE_BLOB) return blobDriver();
+  // Vercel's file system is read-only, so local files can't be used there
+  if (process.env.VERCEL) return readOnlyDriver();
+  try { return localDriver(); } catch (e) {
+    console.error('Local storage unavailable:', e.message);
+    return readOnlyDriver();
+  }
+}
+
+module.exports = pickDriver();
