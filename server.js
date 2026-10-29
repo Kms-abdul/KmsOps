@@ -156,6 +156,7 @@ app.get('/api/health', (req, res) => {
     ok: true,
     storage: store.kind,
     vercel: ON_VERCEL,
+    blobEnvNames: Object.keys(process.env).filter(k => k.includes('BLOB')).sort(),
     adminUserSet: !!process.env.ADMIN_USER,
     adminPasswordSet: !!process.env.ADMIN_PASSWORD,
     sessionSecretSet: !!process.env.SESSION_SECRET

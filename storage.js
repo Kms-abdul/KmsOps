@@ -12,7 +12,15 @@ const { Readable } = require('stream');
 
 const MAX_BACKUPS = 30;
 const SEED_CONTENT = path.join(__dirname, 'data', 'content.json');
-const USE_BLOB = !!process.env.BLOB_READ_WRITE_TOKEN;
+// A store connected with a custom prefix exposes e.g. MYSTORE_BLOB_READ_WRITE_TOKEN;
+// map it to the names the Blob SDK reads.
+for (const name of ['BLOB_READ_WRITE_TOKEN', 'BLOB_STORE_ID']) {
+  if (process.env[name]) continue;
+  const prefixed = Object.keys(process.env).find(k => k.endsWith(`_${name}`) && process.env[k]);
+  if (prefixed) process.env[name] = process.env[prefixed];
+}
+// Older stores give a read-write token; newer ones give a store id plus Vercel OIDC
+const USE_BLOB = !!(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 const NOT_CONFIGURED = 'Storage is not set up yet. In Vercel open Storage → Create → Blob (Private), connect it to this project, then redeploy.';
 
 function seedFor(name, fallback) {
