@@ -3,6 +3,7 @@
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
     { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/ads", "destination": "/ads.html" },
     { "source": "/product/:slug", "destination": "/product.html" }
   ]
 }

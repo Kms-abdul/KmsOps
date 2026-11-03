@@ -34,6 +34,13 @@ To pick your own login before the first start, set the environment variables `AD
 
 Changes go live when you press **Save & publish** (or Ctrl+S).
 
+## Advertising in your other apps
+
+**Admin → Advertisements** manages ads that appear inside your other apps (for example the side areas of the Kitchora login page). The same page gives you ready-to-copy `<iframe>` embed code. The other app only needs that code once; after that, ads change whenever you publish here.
+
+- With no custom ads, every visible Application is advertised automatically.
+- `/ads` options: `layout=vertical` (side panel) or `banner`, `exclude=<app slug>` to hide an app's own ad, `start=<n>` to pick the first ad, `interval=<seconds>`, and `source=<name>`, which is added to links as `utm_source` so visits can be traced.
+
 ## Files
 
 ```

@@ -143,6 +143,21 @@
         { k: 'a', label: 'Answer', type: 'textarea', full: true },
         { k: 'visible', label: 'Show on website', type: 'toggle' }
       ]
+    },
+    ads: {
+      label: 'Advertisements', icon: '📣', title: 'title', sub: x => [x.product && `For ${x.product}`, x.text].filter(Boolean).join(' · '), thumb: x => x.image,
+      help: 'Ads shown inside your other apps (e.g. the Kitchora login page) through the embed code below. While this list is empty, your Applications are advertised automatically.',
+      blank: () => ({ id: uid('ad'), title: 'New ad', text: '', image: '', buttonText: 'Learn more', link: '', product: '', accent: '#1D6FE0', visible: true }),
+      fields: [
+        { k: 'title', label: 'Headline', req: true, full: true },
+        { k: 'text', label: 'Short text', type: 'textarea', full: true },
+        { k: 'image', label: 'Image', type: 'image', full: true, hint: 'Optional. Wide or square images both work.' },
+        { k: 'buttonText', label: 'Button text' },
+        { k: 'accent', label: 'Colour', type: 'color' },
+        { k: 'product', label: 'Application', list: 'products', hint: 'Its page is used as the link, and the ad is hidden inside that app' },
+        { k: 'link', label: 'Custom link (optional)', type: 'url', hint: 'Overrides the application page, e.g. https://…' },
+        { k: 'visible', label: 'Show this ad', type: 'toggle' }
+      ]
     }
   };
 
@@ -190,6 +205,7 @@
     { group: 'Overview' }, { id: 'dashboard', label: 'Dashboard', icon: '🏠' }, { id: 'enquiries', label: 'Enquiries', icon: '📥' },
     { group: 'Website content' }, { id: 'settings', label: 'Site settings', icon: '🎨' },
     ...['products', 'services', 'industries', 'workflows', 'process', 'stats', 'testimonials', 'faqs'].map(id => ({ id, label: COLLECTIONS[id].label, icon: COLLECTIONS[id].icon })),
+    { group: 'Promotion' }, { id: 'ads', label: COLLECTIONS.ads.label, icon: COLLECTIONS.ads.icon },
     { group: 'System' }, { id: 'media', label: 'Media library', icon: '🖼️' }, { id: 'backups', label: 'Backups', icon: '🕘' }, { id: 'account', label: 'Account', icon: '🔐' }
   ];
 
@@ -329,7 +345,9 @@
       default: {
         const listId = f.list ? `dl-${f.list}` : null;
         const inp = h('input', { type: f.type === 'url' ? 'url' : 'text', value: get() ?? '', required: f.req, list: listId, oninput: e => set(e.target.value) });
-        const dl = f.list === 'categories' ? h('datalist', { id: listId }, [...new Set(content.products.map(p => p.category).filter(Boolean))].map(c => h('option', { value: c }))) : null;
+        const options = f.list === 'categories' ? [...new Set(content.products.map(p => p.category).filter(Boolean))]
+          : f.list === 'products' ? content.products.map(p => p.slug || slugify(p.name)) : [];
+        const dl = listId ? h('datalist', { id: listId }, options.map(c => h('option', { value: c }))) : null;
         return wrap(inp, dl);
       }
     }
@@ -540,7 +558,8 @@
     const arr = content[key];
     const titleOf = x => (typeof cfg.title === 'function' ? cfg.title(x) : x[cfg.title]) || '(untitled)';
     v.append(h('div.list-head', h('p.muted', cfg.help), h('button.btn.primary', { onclick: () => addItem(key) }, `+ Add ${cfg.label.toLowerCase().replace(/s$/, '')}`)));
-    if (!arr.length) return v.append(h('div.empty', `No ${cfg.label.toLowerCase()} yet.`));
+    if (key === 'ads') v.append(embedCard());
+    if (!arr.length) return v.append(h('div.empty', key === 'ads' ? 'No custom ads yet — your Applications are being advertised automatically.' : `No ${cfg.label.toLowerCase()} yet.`));
     v.append(h('div.items', arr.map((x, i) => {
       const thumb = cfg.thumb?.(x);
       const visibleToggle = 'visible' in x;
@@ -556,6 +575,31 @@
           h('button.btn.sm', { onclick: () => editItem(key, x) }, 'Edit'),
           h('button.icon-btn.danger', { title: 'Delete', onclick: () => { if (confirm(`Delete “${titleOf(x)}”?`)) { arr.splice(i, 1); markDirty(); route(); } } }, '🗑')));
     })));
+  }
+
+  // Ready-to-paste iframe code for showing ads inside another app
+  function embedCard() {
+    const appSel = h('select', h('option', { value: '' }, 'All applications'),
+      content.products.map(p => h('option', { value: p.slug || slugify(p.name) }, `Inside ${p.name} (hide its own ads)`)));
+    const code = h('pre.code');
+    const draw = () => {
+      const ex = appSel.value ? `exclude=${encodeURIComponent(appSel.value)}&` : '';
+      const base = `${location.origin}/ads?${ex}source=${encodeURIComponent(appSel.value || 'partner')}`;
+      const side = (label, start) => `<!-- ${label} side panel -->\n<iframe src="${base}&layout=vertical&start=${start}" title="Offers from KMS Ops" loading="lazy"\n  style="width:100%;height:100%;min-height:520px;border:0;background:transparent"></iframe>\n\n`;
+      code.textContent = side('Left', 0) + side('Right', 1) +
+        `<!-- Wide banner -->\n<iframe src="${base}&layout=banner" title="Offers from KMS Ops" loading="lazy"\n  style="width:100%;height:140px;border:0;background:transparent"></iframe>`;
+    };
+    appSel.addEventListener('change', draw);
+    draw();
+    return h('div.card', { style: { marginBottom: '18px' } },
+      h('h3', 'Embed code'),
+      h('p.muted', 'Paste one of these into the other app’s page (e.g. the empty side areas of the Kitchora login). Ads update there automatically when you publish here.'),
+      h('div.form-grid', h('label', 'Show ads', appSel),
+        h('div.field', h('span', 'Preview'), h('div', { style: { display: 'flex', gap: '8px' } },
+          h('a.btn.sm', { href: '/ads?layout=vertical', target: '_blank' }, 'Side panel ↗'),
+          h('a.btn.sm', { href: '/ads?layout=banner', target: '_blank' }, 'Banner ↗')))),
+      code,
+      h('button.btn.sm', { type: 'button', onclick: async () => { await navigator.clipboard.writeText(code.textContent); toast('Embed code copied ✓'); } }, '⧉ Copy code'));
   }
 
   function addItem(key) {

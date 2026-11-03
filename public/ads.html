@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Offers from KMS Ops</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Embeddable ad slot: designed to sit inside another app's page via <iframe>.
+       ?layout=vertical (tall side panel, default) | banner (wide strip)
+       ?exclude=<app slug>  ?interval=<seconds>  ?source=<who embeds it>  ?start=<first ad, 0-based> */
+    :root { --ink: #1C2440; --muted: #5E6886; --c: #1D6FE0; --font: 'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: transparent; font-family: var(--font); color: var(--ink); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    [hidden] { display: none !important; }
+
+    .slot { height: 100%; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .stage { position: relative; width: 100%; }
+    .ad { position: absolute; inset: 0; opacity: 0; transform: translateY(14px) scale(.98); pointer-events: none;
+      transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1); }
+    .ad.on { position: relative; opacity: 1; transform: none; pointer-events: auto; }
+
+    .card { display: block; border-radius: 22px; overflow: hidden; background: #fff; border: 1px solid #E6E9F2;
+      box-shadow: 0 1px 2px rgba(28,36,64,.05), 0 24px 50px -28px rgba(28,36,64,.35); transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 1px 2px rgba(28,36,64,.05), 0 30px 60px -26px color-mix(in srgb, var(--c) 55%, rgba(28,36,64,.4)); }
+
+    .media { position: relative; overflow: hidden; background: linear-gradient(145deg, color-mix(in srgb, var(--c) 22%, #F3F5FB), color-mix(in srgb, var(--c) 8%, #EEF1F8)); }
+    .media img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(.2,.8,.2,1); }
+    .card:hover .media img { transform: scale(1.05); }
+    /* generated artwork when an ad has no image */
+    .art { position: absolute; inset: 0; display: grid; place-items: center; }
+    .art::before { content: ''; position: absolute; inset: 0; opacity: .5;
+      background-image: linear-gradient(color-mix(in srgb, var(--c) 18%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--c) 18%, transparent) 1px, transparent 1px);
+      background-size: 26px 26px; mask-image: radial-gradient(circle at 50% 50%, #000 20%, transparent 75%); }
+    .art span { position: relative; width: 38%; max-width: 110px; aspect-ratio: 1; border-radius: 28%; display: grid; place-items: center; font-size: clamp(2rem, 7vw, 3.4rem);
+      background: linear-gradient(145deg, color-mix(in srgb, var(--c) 82%, #fff), var(--c)); box-shadow: 0 18px 30px -14px var(--c), inset 0 2px 0 rgba(255,255,255,.4), inset 0 -5px 0 rgba(0,0,0,.12);
+      animation: float 5s ease-in-out infinite; }
+    @keyframes float { 50% { transform: translateY(-8px) rotate(-3deg); } }
+
+    .body { padding: 20px 22px 22px; }
+    .tag { display: inline-block; font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--c);
+      background: color-mix(in srgb, var(--c) 12%, transparent); padding: .3em .75em; border-radius: 999px; margin-bottom: 10px; }
+    h3 { font-family: 'Sora', var(--font); font-size: 1.35rem; line-height: 1.2; letter-spacing: -.02em; margin: 0 0 8px; }
+    p { margin: 0 0 18px; color: var(--muted); font-size: .95rem; line-height: 1.55; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: .75em 1.2em; border-radius: 12px; font-weight: 700; font-size: .92rem; color: #fff;
+      background: linear-gradient(135deg, var(--c), color-mix(in srgb, var(--c) 70%, #000)); box-shadow: 0 10px 20px -10px var(--c); }
+    .btn i { font-style: normal; transition: transform .3s; }
+    .card:hover .btn i { transform: translateX(4px); }
+
+    .foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; }
+    .by { display: inline-flex; align-items: center; gap: 7px; font-size: .72rem; font-weight: 600; color: var(--muted); }
+    .by img { width: 22px; height: 22px; }
+    .dots { display: flex; gap: 6px; }
+    .dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 999px; background: #CDD3E5; cursor: pointer; transition: width .3s, background .3s; }
+    .dots button.on { width: 22px; background: var(--c); }
+
+    /* Vertical: tall side panel */
+    .vertical .stage { max-width: 380px; }
+    .vertical .media { aspect-ratio: 4 / 3; }
+
+    /* Banner: wide strip */
+    .banner .slot { padding: 8px; }
+    .banner .card { display: flex; align-items: stretch; border-radius: 18px; }
+    .banner .media { flex: none; width: 34%; max-width: 220px; min-height: 100px; }
+    .banner .art span { width: auto; height: 62%; font-size: 1.8rem; }
+    .banner .body { flex: 1; display: flex; align-items: center; gap: 18px; padding: 14px 18px; }
+    .banner .text { flex: 1; min-width: 0; }
+    .banner h3 { font-size: 1.1rem; margin-bottom: 4px; }
+    .banner p { margin: 0; font-size: .88rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .banner .tag { margin-bottom: 6px; }
+    .banner .foot { display: none; }
+    @media (max-width: 520px) { .banner .body { flex-direction: column; align-items: flex-start; gap: 10px; } .banner .media { width: 30%; } }
+
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <main class="slot"><div class="stage" id="stage" aria-live="polite"></div></main>
+  <script>
+  (async () => {
+    const q = new URLSearchParams(location.search);
+    const layout = q.get('layout') === 'banner' ? 'banner' : 'vertical';
+    const interval = Math.max(3, Number(q.get('interval')) || 7) * 1000;
+    const source = (q.get('source') || 'partner').replace(/[^\w-]/g, '').slice(0, 40);
+    document.body.className = layout;
+
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const color = v => (/^#[0-9a-f]{3,8}$/i.test(String(v || '').trim()) ? v.trim() : '#1D6FE0');
+    // links open the KMS Ops page in a new tab, tagged so visits can be traced back
+    const href = link => {
+      try {
+        const u = new URL(link || '/', location.origin);
+        if (!/^https?:$/.test(u.protocol)) return location.origin;
+        if (u.origin === location.origin) {
+          u.searchParams.set('utm_source', source);
+          u.searchParams.set('utm_medium', 'ad');
+        }
+        return u.href;
+      } catch { return location.origin; }
+    };
+    const img = u => (/^(\/(?!\/)|https?:\/\/)/i.test(String(u || '')) ? esc(u) : '');
+
+    let data;
+    try {
+      const qs = q.get('exclude') ? `?exclude=${encodeURIComponent(q.get('exclude'))}` : '';
+      data = await (await fetch(`/api/ads${qs}`)).json();
+    } catch { return; }
+    const ads = data.ads || [];
+    if (!ads.length) return;
+
+    // ?start=N picks the first ad (so two slots on one page differ); otherwise random
+    const startAt = parseInt(q.get('start'), 10);
+    const first = Number.isInteger(startAt) ? ((startAt % ads.length) + ads.length) % ads.length : Math.floor(Math.random() * ads.length);
+    const stage = document.getElementById('stage');
+    const dots = n =>ads.length > 1 ? `<div class="dots">${ads.map((_, i) => `<button type="button" aria-label="Ad ${i + 1}"${i === n ? ' class="on"' : ''} data-i="${i}"></button>`).join('')}</div>` : '<span></span>';
+    stage.innerHTML = ads.map((ad, n) => {
+      const picture = img(ad.image);
+      return `<div class="ad${n === first ? ' on' : ''}" style="--c:${color(ad.accent)}">
+        <a class="card" href="${esc(href(ad.link))}" target="_blank" rel="noopener">
+          <div class="media">${picture ? `<img src="${picture}" alt="">` : `<div class="art"><span>${esc(ad.icon || '✦')}</span></div>`}</div>
+          <div class="body"><div class="text">
+            ${ad.category ? `<span class="tag">${esc(ad.category)}</span>` : ''}
+            <h3>${esc(ad.title)}</h3>${ad.text ? `<p>${esc(ad.text)}</p>` : ''}</div>
+            <span class="btn">${esc(ad.buttonText)} <i>→</i></span>
+          </div>
+        </a>
+        <div class="foot"><span class="by"><img src="/img/logo-mark.svg" alt="">by ${esc(data.brand)}</span>${dots(n)}</div>
+      </div>`;
+    }).join('');
+
+    if (ads.length < 2) return;
+    const slides = [...stage.querySelectorAll('.ad')];
+    let cur = first, timer;
+    const show = i => {
+      slides[cur].classList.remove('on');
+      cur = (i + slides.length) % slides.length;
+      slides[cur].classList.add('on');
+    };
+    const start = () => { clearInterval(timer); timer = setInterval(() => show(cur + 1), interval); };
+    stage.addEventListener('click', e => { const d = e.target.closest('.dots button'); if (d) { show(+d.dataset.i); start(); } });
+    // pause while the visitor is looking at an ad
+    stage.addEventListener('mouseenter', () => clearInterval(timer));
+    stage.addEventListener('mouseleave', start);
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) start();
+  })();
+  </script>
+</body>
+</html>

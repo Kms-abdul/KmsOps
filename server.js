@@ -180,6 +180,31 @@ app.get('/api/content', a(async (req, res) => {
   });
 }));
 
+// Ads for embedding in other apps (/ads page). Falls back to the visible
+// applications when no custom ads exist. ?exclude=<slug> hides an app's own ads.
+app.get('/api/ads', a(async (req, res) => {
+  const c = await store.readJson('content.json', {});
+  const exclude = String(req.query.exclude || '').toLowerCase();
+  const products = (c.products || []).filter(p => p.visible !== false);
+  const custom = (c.ads || []).filter(x => x.visible !== false);
+  const ads = (custom.length ? custom.map(x => {
+    const p = products.find(p => p.slug === x.product);
+    return {
+      id: x.id, title: x.title, text: x.text, buttonText: x.buttonText || 'Learn more',
+      image: x.image || (p && (p.coverImage || (p.gallery || [])[0])) || '',
+      icon: p?.icon || '', accent: x.accent || p?.accent || '', product: x.product || '',
+      link: x.link || (p ? `/product/${p.slug}` : '/')
+    };
+  }) : products.map(p => ({
+    id: p.id, title: p.name, text: p.tagline, buttonText: `Explore ${p.name}`,
+    image: p.coverImage || (p.gallery || [])[0] || '', icon: p.icon || '', accent: p.accent || '',
+    product: p.slug, link: `/product/${p.slug}`, category: p.category || ''
+  }))).filter(x => !exclude || x.product.toLowerCase() !== exclude);
+  // short CDN cache: partner apps can send a lot of traffic
+  res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=60');
+  res.json({ brand: c.settings?.brand || 'KMS Ops', ads });
+}));
+
 // Contact / enquiry form
 app.post('/api/enquiry', a(async (req, res) => {
   const clean = (v, max) => String(v ?? '').trim().slice(0, max);
