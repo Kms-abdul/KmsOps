@@ -205,8 +205,40 @@ app.get('/api/ads', a(async (req, res) => {
   }))).filter(x => !isExcluded(x.product, x.productName));
   // short CDN cache: partner apps can send a lot of traffic
   res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=60');
-  res.json({ brand: c.settings?.brand || 'KMS Ops', ads });
+  res.json({ brand: c.settings?.brand || 'KMS Ops', ads, panel: buildPanel(c, products, isExcluded) });
 }));
+
+// Content for the large brand / solutions panels shown beside a partner app's login
+function buildPanel(c, products, isExcluded) {
+  const s = c.settings || {};
+  const host = products.find(p => isExcluded(p.slug, p.name));
+  const first = arr => (arr || []).filter(Boolean).slice(0, 3).join(', ');
+  const solutions = products.map(p => ({
+    title: p.category || p.name, text: first(p.features), icon: p.icon || '◆', accent: p.accent || '#1D6FE0', link: `/product/${p.slug}`
+  }));
+  const services = (c.services || []).filter(x => x.visible !== false);
+  if (services.length) solutions.push({ title: 'Accounting & Tax', text: first(services.map(x => x.title)), icon: '🧾', accent: '#F2B227', link: '/#services' });
+  const flows = (c.workflows || []).filter(x => x.visible !== false);
+  if (flows.length) solutions.push({ title: 'Business Automation', text: first(flows.map(x => x.title)), icon: '⚙️', accent: '#E9468A', link: '/#workflows' });
+  const industries = (c.industries || []).filter(x => x.visible !== false).length;
+  return {
+    brand: s.brand || 'KMS Ops',
+    brandFull: s.brandFull ?? 'Key Management Solutions',
+    motto: s.brandMotto || 'Build • Automate • Operate',
+    chips: s.panelChips || 'Technology • People • Growth',
+    text: s.panelText || 'Technology and business solutions designed to simplify the way organizations work.',
+    script: s.panelScript || 'Empowering Businesses Across Industries',
+    ecoTitle: s.panelEcoTitle || 'One Ecosystem. | Multiple Solutions.',
+    ecoText: s.panelEcoText || 'From restaurants to education, inventory, HR, accounting and more — KMS Ops helps businesses operate smarter.',
+    solutions: solutions.slice(0, 6),
+    stats: [
+      industries && { value: `${industries}+`, label: 'Industries' },
+      ...(c.stats || []).slice(0, 1).map(x => ({ value: `${x.value}${x.suffix || ''}`, label: String(x.label || '').split(' ')[0] })),
+      { value: 'Scalable', label: 'Solutions' }
+    ].filter(Boolean),
+    host: host ? { name: host.name, icon: host.icon || '', accent: host.accent || '', image: host.coverImage || (host.gallery || [])[0] || '' } : null
+  };
+}
 
 // Contact / enquiry form
 app.post('/api/enquiry', a(async (req, res) => {

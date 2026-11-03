@@ -39,7 +39,8 @@ Changes go live when you press **Save & publish** (or Ctrl+S).
 **Admin → Advertisements** manages ads that appear inside your other apps (for example the side areas of the Kitchora login page). The same page gives you ready-to-copy `<iframe>` embed code. The other app only needs that code once; after that, ads change whenever you publish here.
 
 - With no custom ads, every visible Application is advertised automatically.
-- `/ads` options: `layout=vertical` (side panel) or `banner`, `exclude=<app slug>` to hide an app's own ad, `start=<n>` to pick the first ad, `interval=<seconds>`, and `source=<name>`, which is added to links as `utm_source` so visits can be traced.
+- Big panels for beside a login form: `layout=brand` (KMS Ops brand panel with device mock-ups), `layout=solutions` ("One ecosystem" list built from your applications, services and workflows) and `layout=badge` ("A KMS Ops Product"). Their text is editable in **Site settings → Partner app panels**.
+- `/ads` options: `layout=vertical` (side ad card) or `banner`, `exclude=<app slug>` to hide an app's own ad, `start=<n>` to pick the first ad, `interval=<seconds>`, and `source=<name>`, which is added to links as `utm_source` so visits can be traced.
 
 ## Files
 

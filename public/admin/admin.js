@@ -196,6 +196,13 @@
       { k: 'social.twitter', label: 'X / Twitter', type: 'url' },
       { k: 'social.youtube', label: 'YouTube', type: 'url' }
     ] },
+    { title: 'Partner app panels', desc: 'Text for the large brand and solutions panels shown beside other apps (e.g. the Kitchora login). Lists, logo and numbers come from your content automatically.', fields: [
+      { k: 'panelChips', label: 'Brand panel: pill text', hint: 'Separate with • e.g. Technology • People • Growth' },
+      { k: 'panelScript', label: 'Brand panel: handwritten line', hint: 'e.g. Empowering Businesses Across Industries' },
+      { k: 'panelText', label: 'Brand panel: description', type: 'textarea', full: true },
+      { k: 'panelEcoTitle', label: 'Solutions panel: title', hint: 'Use | to split the two coloured lines' },
+      { k: 'panelEcoText', label: 'Solutions panel: description', type: 'textarea', full: true }
+    ] },
     { title: 'Sections', desc: 'Turn whole sections of the home page on or off.', fields:
       ['products', 'services', 'industries', 'workflows', 'process', 'testimonials', 'faqs', 'contact'].map(k => ({ k: `sections.${k}`, label: COLLECTIONS[k]?.label || (k === 'contact' ? 'Contact form' : k), type: 'toggle', defaultOn: true }))
     }
@@ -585,9 +592,16 @@
     const draw = () => {
       const ex = appSel.value ? `exclude=${encodeURIComponent(appSel.value)}&` : '';
       const base = `${location.origin}/ads?${ex}source=${encodeURIComponent(appSel.value || 'partner')}`;
-      const side = (label, start) => `<!-- ${label} side panel -->\n<iframe src="${base}&layout=vertical&start=${start}" title="Offers from KMS Ops" loading="lazy"\n  style="width:100%;height:100%;min-height:520px;border:0;background:transparent"></iframe>\n\n`;
-      code.textContent = side('Left', 0) + side('Right', 1) +
-        `<!-- Wide banner -->\n<iframe src="${base}&layout=banner" title="Offers from KMS Ops" loading="lazy"\n  style="width:100%;height:140px;border:0;background:transparent"></iframe>`;
+      const frame = (comment, layout, style) => `<!-- ${comment} -->\n<iframe src="${base}&layout=${layout}" title="KMS Ops" loading="lazy"\n  style="${style};border:0;background:transparent"></iframe>\n\n`;
+      code.textContent =
+        '<!-- ===== Big panels (recommended beside a login form) ===== -->\n\n' +
+        frame('LEFT: brand panel', 'brand', 'width:100%;height:100%;min-height:640px') +
+        frame('RIGHT: solutions panel', 'solutions', 'width:100%;height:100%;min-height:640px') +
+        frame('Under the sign-in form: "A KMS Ops Product"', 'badge', 'width:100%;height:56px') +
+        '<!-- ===== Rotating ad cards ===== -->\n\n' +
+        frame('Side ad card (left)', 'vertical&start=0', 'width:100%;height:100%;min-height:520px') +
+        frame('Side ad card (right)', 'vertical&start=1', 'width:100%;height:100%;min-height:520px') +
+        frame('Wide banner', 'banner', 'width:100%;height:140px').trimEnd();
     };
     appSel.addEventListener('change', draw);
     draw();
@@ -596,7 +610,9 @@
       h('p.muted', 'Paste one of these into the other app’s page (e.g. the empty side areas of the Kitchora login). Ads update there automatically when you publish here.'),
       h('div.form-grid', h('label', 'Show ads', appSel),
         h('div.field', h('span', 'Preview'), h('div', { style: { display: 'flex', gap: '8px' } },
-          h('a.btn.sm', { href: '/ads?layout=vertical', target: '_blank' }, 'Side panel ↗'),
+          h('a.btn.sm', { href: '/ads?layout=brand', target: '_blank' }, 'Brand ↗'),
+          h('a.btn.sm', { href: '/ads?layout=solutions', target: '_blank' }, 'Solutions ↗'),
+          h('a.btn.sm', { href: '/ads?layout=vertical', target: '_blank' }, 'Ad card ↗'),
           h('a.btn.sm', { href: '/ads?layout=banner', target: '_blank' }, 'Banner ↗')))),
       code,
       h('button.btn.sm', { type: 'button', onclick: async () => { await navigator.clipboard.writeText(code.textContent); toast('Embed code copied ✓'); } }, '⧉ Copy code'));

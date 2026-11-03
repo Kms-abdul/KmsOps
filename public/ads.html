@@ -7,10 +7,12 @@
   <title>Offers from KMS Ops</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@700;800&family=Caveat:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/ads-panels.css">
   <style>
     /* Embeddable ad slot: designed to sit inside another app's page via <iframe>.
        ?layout=vertical (tall side panel, default) | banner (wide strip)
+              | brand (large KMS Ops brand panel) | solutions (large "one ecosystem" panel) | badge ("A KMS Ops Product")
        ?exclude=<app slug>  ?interval=<seconds>  ?source=<who embeds it>  ?start=<first ad, 0-based> */
     :root { --ink: #1C2440; --muted: #5E6886; --c: #1D6FE0; --font: 'Plus Jakarta Sans', system-ui, 'Segoe UI', sans-serif; }
     * { box-sizing: border-box; }
@@ -80,10 +82,12 @@
 </head>
 <body>
   <main class="slot"><div class="stage" id="stage" aria-live="polite"></div></main>
+  <script src="/js/ads-panels.js"></script>
   <script>
   (async () => {
     const q = new URLSearchParams(location.search);
-    const layout = q.get('layout') === 'banner' ? 'banner' : 'vertical';
+    const PANELS = ['brand', 'solutions', 'badge'];
+    const layout = ['banner', ...PANELS].includes(q.get('layout')) ? q.get('layout') : 'vertical';
     const interval = Math.max(3, Number(q.get('interval')) || 7) * 1000;
     const source = (q.get('source') || 'partner').replace(/[^\w-]/g, '').slice(0, 40);
     document.body.className = layout;
@@ -109,6 +113,10 @@
       const qs = q.get('exclude') ? `?exclude=${encodeURIComponent(q.get('exclude'))}` : '';
       data = await (await fetch(`/api/ads${qs}`)).json();
     } catch { return; }
+    if (PANELS.includes(layout)) {
+      document.body.classList.add(layout === 'badge' ? 'badge-mode' : 'panel-mode');
+      return window.KMSPanels.render(layout, data, { href: link => esc(href(link)) });
+    }
     const ads = data.ads || [];
     if (!ads.length) return;
 
