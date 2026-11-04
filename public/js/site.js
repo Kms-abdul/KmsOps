@@ -163,6 +163,7 @@
   KMS.renderFooter(c);
   KMS.reveal();
   heroScene();
+  if (window.KMSWorld) KMSWorld.start(c);
 
   // ===== helpers =====
   function countUp(root) {

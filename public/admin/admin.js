@@ -196,6 +196,11 @@
       { k: 'social.twitter', label: 'X / Twitter', type: 'url' },
       { k: 'social.youtube', label: 'YouTube', type: 'url' }
     ] },
+    { title: 'Experience', desc: 'The 3D welcome portal and the robot guide on the home page.', fields: [
+      { k: 'fx.intro', label: 'Welcome portal intro', type: 'toggle', defaultOn: true },
+      { k: 'fx.robot', label: 'Robot guide', type: 'toggle', defaultOn: true },
+      { k: 'fx.robotName', label: 'Robot name', hint: 'Default: KeyBo' }
+    ] },
     { title: 'Partner app panels', desc: 'Text for the large brand and solutions panels shown beside other apps (e.g. the Kitchora login). Lists, logo and numbers come from your content automatically.', fields: [
       { k: 'panelChips', label: 'Brand panel: pill text', hint: 'Separate with • e.g. Technology • People • Growth' },
       { k: 'panelScript', label: 'Brand panel: handwritten line', hint: 'e.g. Empowering Businesses Across Industries' },
