@@ -199,6 +199,7 @@
     { title: 'Experience', desc: 'The 3D welcome portal and the robot guide on the home page.', fields: [
       { k: 'fx.intro', label: 'Welcome portal intro', type: 'toggle', defaultOn: true },
       { k: 'fx.robot', label: 'Robot guide', type: 'toggle', defaultOn: true },
+      { k: 'fx.room', label: '3D application room background', type: 'toggle', defaultOn: true },
       { k: 'fx.robotName', label: 'Robot name', hint: 'Default: KeyBo' }
     ] },
     { title: 'Partner app panels', desc: 'Text for the large brand and solutions panels shown beside other apps (e.g. the Kitchora login). Lists, logo and numbers come from your content automatically.', fields: [

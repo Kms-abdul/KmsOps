@@ -108,14 +108,59 @@ window.KMSWorld = (() => {
     const txt = bubble.querySelector('.bot-text');
     const btns = bubble.querySelector('.b-btns');
 
-    document.body.append(bot, bubble);
-    requestAnimationFrame(() => setTimeout(() => bot.classList.add('in'), 80));
+    const holder = document.createElement('div');
+    holder.className = 'bub-pos';
+    holder.append(bubble);
+    document.body.append(bot, holder);
 
     const wave = () => { bot.classList.remove('wave'); void bot.offsetWidth; bot.classList.add('wave'); };
+
+    /* ---- free flight: the robot drifts between spots; the bubble follows ---- */
+    const BW = matchMedia('(max-width: 640px)').matches ? 74 : 96;
+    const BH = BW * 1.12;
+    let px = -160, py = innerHeight * 0.72;            // current position
+    let tx = 16, ty = innerHeight - BH - 26;           // target position
+    let touring = false, open = false;
+    const clampX = x => Math.min(Math.max(x, 8), innerWidth - BW - 8);
+    const clampY = y => Math.min(Math.max(y, 86), innerHeight - BH - 12);
+    const fly = (x, y) => { tx = clampX(x); ty = clampY(y); };
+    const spots = () => {
+      const W = innerWidth, H = innerHeight;
+      return [
+        [16, H - BH - 26], [14, H * .34], [W - BW - 16, H * .3],
+        [W - BW - 16, H - BH - 120], [W * .44, H - BH - 20], [W * .22, 96]
+      ];
+    };
+    const roam = () => {
+      if (touring || open || document.hidden) return;
+      const s = spots()[Math.floor(Math.random() * 6)];
+      fly(s[0] + Math.random() * 30 - 15, s[1] + Math.random() * 24 - 12);
+    };
+    let last = performance.now();
+    (function frame(now = last) {
+      if (!bot.isConnected) return;
+      const dt = Math.min(now - last, 100); last = now;
+      // time-based easing, so speed is the same at any frame rate
+      const k = reduced ? 1 : 1 - Math.pow(0.945, dt / 16.7);
+      px += (tx - px) * k; py += (ty - py) * k;
+      const tilt = reduced ? 0 : Math.max(-13, Math.min(13, (tx - px) * 0.06));
+      bot.style.transform = `translate3d(${px}px,${py}px,0) rotate(${tilt}deg)`;
+      if (!bubble.hidden) {
+        const bw = bubble.offsetWidth || 320, bh = bubble.offsetHeight || 120;
+        const bx = Math.min(Math.max(px - 10, 8), innerWidth - bw - 8);
+        const by = Math.max(8, py - bh - 16);
+        holder.style.transform = `translate3d(${bx}px,${by}px,0)`;
+        bubble.style.setProperty('--ax', `${Math.min(Math.max(px - bx + BW * .3, 14), bw - 36)}px`);
+      }
+      requestAnimationFrame(frame);
+    })();
+    if (!reduced) setInterval(roam, 6500);
+    addEventListener('resize', () => fly(tx, ty));
 
     let typeTimer = null;
     function say(text, buttons = []) {
       clearInterval(typeTimer);
+      open = true;
       bubble.hidden = false;
       requestAnimationFrame(() => bubble.classList.add('on'));
       btns.replaceChildren();
@@ -137,8 +182,9 @@ window.KMSWorld = (() => {
     }
     function hush() {
       clearInterval(typeTimer);
+      open = false;
       bubble.classList.remove('on');
-      setTimeout(() => (bubble.hidden = true), 300);
+      setTimeout(() => { if (!open) bubble.hidden = true; }, 300);
     }
 
     /* Tour steps, built from whichever sections exist */
@@ -153,13 +199,16 @@ window.KMSWorld = (() => {
       ['#contact', `And that's the tour! Drop your details here for a free demo — tell the team ${name} sent you 😉`]
     ].filter(([sel]) => document.querySelector(sel));
 
-    let idx = 0, touring = false;
+    let idx = 0;
     const goto = sel => document.querySelector(sel)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
 
     function showStep() {
       const [sel, text] = steps[idx];
       hush();
       goto(sel);
+      // fly to alternating sides of the screen, out of the content's way
+      const W = innerWidth, H = innerHeight;
+      fly(idx % 2 ? W - BW - 20 : 20, H * 0.5 + (idx % 3) * 40);
       const nav = [];
       if (idx > 0) nav.push(['‹ Back', () => { idx--; showStep(); }]);
       nav.push(idx < steps.length - 1
@@ -177,7 +226,7 @@ window.KMSWorld = (() => {
       say('Need anything?', [
         ['🚀 Take the tour', startTour, true],
         ['💬 Request a demo', () => { hush(); goto('#contact'); }],
-        ['🙈 Hide me', () => { store.set('kmsBotHide', '1'); bot.remove(); bubble.remove(); }]
+        ['🙈 Hide me', () => { store.set('kmsBotHide', '1'); bot.remove(); holder.remove(); }]
       ]);
     }
 
@@ -199,9 +248,46 @@ window.KMSWorld = (() => {
     }, reduced ? 300 : 1100);
   }
 
+  /* ---------- Application room: 3D walls of app panels around the page ---------- */
+  function room(c) {
+    if (reduced || matchMedia('(max-width: 760px)').matches) return;
+    const items = [
+      ...(c.products || []).map(p => ({ i: p.icon, t: p.name, s: p.category || 'Application', a: p.accent })),
+      ...(c.services || []).map(x => ({ i: x.icon, t: x.title, s: 'Service' })),
+      ...(c.industries || []).map(x => ({ i: x.icon, t: x.name, s: 'Industry' }))
+    ].filter(x => x.i && x.t);
+    if (items.length < 4) return;
+
+    const half = Math.ceil(items.length / 2);
+    const panel = x => `<div class="wpanel"${/^#[0-9a-f]{3,8}$/i.test(x.a || '') ? ` style="--pa:${x.a}"` : ''}>
+      <i>${esc(x.i)}</i><span>${esc(x.t)}<small>${esc(x.s)}</small></span></div>`;
+    const track = list => `<div class="wall-track" style="--wd:${44 + list.length * 3}s">${list.map(panel).join('')}${list.map(panel).join('')}</div>`;
+
+    const el = document.createElement('div');
+    el.className = 'room';
+    el.setAttribute('aria-hidden', 'true');
+    el.innerHTML = `<div class="room-rot"><div class="room-ceil"></div>
+      <div class="wall left">${track(items.slice(0, half))}</div>
+      <div class="wall right">${track(items.slice(half))}</div></div>`;
+    document.body.append(el);
+
+    // the whole room leans gently toward the mouse
+    const rot = el.firstElementChild;
+    let raf = 0;
+    addEventListener('mousemove', e => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        rot.style.setProperty('--ry', `${((e.clientX / innerWidth) - .5) * 6}deg`);
+        rot.style.setProperty('--rx', `${(.5 - (e.clientY / innerHeight)) * 3}deg`);
+      });
+    });
+  }
+
   /* ---------- Entry ---------- */
   function start(c) {
     const fx = (c.settings || {}).fx || {};
+    if (fx.room !== false) room(c);
     const begin = fx.intro !== false ? intro(c) : Promise.resolve();
     begin.then(() => {
       if (fx.robot === false || store.get('kmsBotHide')) return;
