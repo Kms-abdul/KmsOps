@@ -107,6 +107,19 @@
 .wpanel small { display: block; color: #7A84A5; font-weight: 600; font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; }
 
 @media (max-width: 760px) { .room { display: none; } }
+
+/* ---------- 3b. Mobile: a quiet glowing floor under the content ---------- */
+@media (max-width: 760px) {
+  /* the existing hero grid floor comes alive: lines glide toward the viewer */
+  .kms-room .grid-floor { background: none; overflow: hidden; }
+  .kms-room .grid-floor::before { content: ''; position: absolute; left: 0; right: 0; top: -46px; bottom: -46px;
+    background-image: linear-gradient(rgba(29, 111, 224, .17) 1.5px, transparent 1.5px), linear-gradient(90deg, rgba(29, 111, 224, .17) 1.5px, transparent 1.5px);
+    background-size: 46px 46px; animation: floorRun 3.4s linear infinite; }
+  /* soft blue-teal horizon glow along the bottom edge */
+  .kms-room .bg-scene::after { content: ''; position: absolute; left: -10%; right: -10%; bottom: -2%; height: 130px;
+    background: radial-gradient(55% 100% at 50% 100%, rgba(47, 164, 245, .3), rgba(20, 163, 163, .12) 55%, transparent 78%); filter: blur(5px); }
+}
+@keyframes floorRun { to { transform: translateY(46px); } }
 @media (max-width: 640px) {
   .bot { width: 74px; }
   .bot-bubble { font-size: .9rem; }

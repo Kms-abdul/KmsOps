@@ -287,7 +287,11 @@ window.KMSWorld = (() => {
   /* ---------- Entry ---------- */
   function start(c) {
     const fx = (c.settings || {}).fx || {};
-    if (fx.room !== false) room(c);
+    if (fx.room !== false) {
+      // kms-room turns on the mobile glow floor (CSS); room() builds the desktop walls
+      document.body.classList.add('kms-room');
+      room(c);
+    }
     const begin = fx.intro !== false ? intro(c) : Promise.resolve();
     begin.then(() => {
       if (fx.robot === false || store.get('kmsBotHide')) return;
