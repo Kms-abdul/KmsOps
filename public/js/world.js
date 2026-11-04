@@ -248,17 +248,14 @@ window.KMSWorld = (() => {
     }, reduced ? 300 : 1100);
   }
 
-  /* ---------- Application room ---------- */
-  const roomItems = c => [
-    ...(c.products || []).map(p => ({ i: p.icon, t: p.name, s: p.category || 'Application', a: p.accent })),
-    ...(c.services || []).map(x => ({ i: x.icon, t: x.title, s: 'Service' })),
-    ...(c.industries || []).map(x => ({ i: x.icon, t: x.name, s: 'Industry' }))
-  ].filter(x => x.i && x.t);
-
+  /* ---------- Application room: 3D walls of app panels around the page ---------- */
   function room(c) {
-    if (reduced || innerWidth === 0) return;
-    if (matchMedia('(max-width: 760px)').matches) return mobileRoom(c);
-    const items = roomItems(c);
+    if (reduced || matchMedia('(max-width: 760px)').matches) return;
+    const items = [
+      ...(c.products || []).map(p => ({ i: p.icon, t: p.name, s: p.category || 'Application', a: p.accent })),
+      ...(c.services || []).map(x => ({ i: x.icon, t: x.title, s: 'Service' })),
+      ...(c.industries || []).map(x => ({ i: x.icon, t: x.name, s: 'Industry' }))
+    ].filter(x => x.i && x.t);
     if (items.length < 4) return;
 
     const half = Math.ceil(items.length / 2);
@@ -267,7 +264,7 @@ window.KMSWorld = (() => {
     const track = list => `<div class="wall-track" style="--wd:${44 + list.length * 3}s">${list.map(panel).join('')}${list.map(panel).join('')}</div>`;
 
     const el = document.createElement('div');
-    el.className = 'room walls';
+    el.className = 'room';
     el.setAttribute('aria-hidden', 'true');
     el.innerHTML = `<div class="room-rot"><div class="room-ceil"></div>
       <div class="wall left">${track(items.slice(0, half))}</div>
@@ -285,68 +282,6 @@ window.KMSWorld = (() => {
         rot.style.setProperty('--rx', `${(.5 - (e.clientY / innerHeight)) * 3}deg`);
       });
     });
-  }
-
-  /* Mobile room: floor/ceiling grids rushing past + floating app orbs that
-     drift with scroll and tilt with the phone's gyroscope. */
-  function mobileRoom(c) {
-    const items = roomItems(c).slice(0, 10);
-    if (items.length < 3) return;
-
-    // x%, y%, depth (0 far … 1 near) — kept along the edges, away from text
-    const SPOTS = [
-      [8, 15, .9], [91, 11, .65], [94, 33, 1], [6, 44, .6], [93, 57, .85],
-      [7, 68, 1], [89, 79, .6], [12, 90, .8], [52, 7, .5], [68, 93, .95]
-    ];
-    const el = document.createElement('div');
-    el.className = 'room mobile';
-    el.setAttribute('aria-hidden', 'true');
-    el.innerHTML = `<div class="m-stage"><div class="m-ceil"></div><div class="m-floor"></div>
-      ${items.map((x, i) => {
-        const [lx, ty, d] = SPOTS[i % SPOTS.length];
-        const accent = /^#[0-9a-f]{3,8}$/i.test(x.a || '') ? `--pa:${x.a};` : '';
-        return `<div class="m-chip" data-d="${d}" style="left:${lx}%;top:${ty}%;${accent}--s:${Math.round(32 + d * 26)}px;--bd:${4 + (i % 3)}s;--bdel:-${(i * .7).toFixed(1)}s"><i>${esc(x.i)}</i></div>`;
-      }).join('')}</div>`;
-    document.body.append(el);
-
-    const stage = el.firstElementChild;
-    const chips = [...el.querySelectorAll('.m-chip')];
-    let gx = 0, gy = 0, tgx = 0, tgy = 0; // gyro tilt, -1..1 (smoothed)
-
-    // Phone tilt. iOS needs a one-time permission, asked on the first touch.
-    const onOrient = e => {
-      if (e.gamma == null) return;
-      tgx = Math.max(-1, Math.min(1, e.gamma / 28));
-      tgy = Math.max(-1, Math.min(1, (e.beta - 45) / 32));
-    };
-    addEventListener('deviceorientation', onOrient);
-    const askGyro = () => {
-      try { DeviceOrientationEvent?.requestPermission?.().catch(() => {}); } catch { /* not iOS */ }
-      removeEventListener('touchend', askGyro);
-    };
-    addEventListener('touchend', askGyro);
-    // mouse fallback for narrow desktop windows
-    addEventListener('pointermove', e => {
-      if (e.pointerType === 'mouse') { tgx = (e.clientX / innerWidth - .5) * 2; tgy = (e.clientY / innerHeight - .5) * 2; }
-    });
-
-    (function frame() {
-      if (!el.isConnected) return;
-      gx += (tgx - gx) * .08; gy += (tgy - gy) * .08;
-      stage.style.transform = `rotateY(${(gx * 5).toFixed(2)}deg) rotateX(${(-gy * 3.5).toFixed(2)}deg)`;
-      const sy = scrollY;
-      chips.forEach((chip, i) => {
-        const d = +chip.dataset.d;
-        // gyro shift + a smooth scroll-driven sway (each orb on its own phase)
-        const x = gx * 30 * d + Math.sin(sy / 420 + i * 2.1) * 9 * d;
-        const y = gy * 22 * d + Math.sin(sy / 340 + i * 1.7) * 18 * d;
-        chip.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
-      });
-      // the hero's floating cards lean with the phone too
-      const stack = document.getElementById('floatStack');
-      if (stack) stack.style.transform = `rotateY(${(gx * 12).toFixed(2)}deg) rotateX(${(-gy * 10).toFixed(2)}deg)`;
-      requestAnimationFrame(frame);
-    })();
   }
 
   /* ---------- Entry ---------- */

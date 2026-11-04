@@ -106,29 +106,7 @@
   box-shadow: inset 0 -3px 0 color-mix(in srgb, var(--pa) 25%, transparent); }
 .wpanel small { display: block; color: #7A84A5; font-weight: 600; font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; }
 
-/* ---------- 3b. Mobile room: depth corridor + floating app orbs ---------- */
-.room.mobile { perspective: 700px; }
-.m-stage { position: absolute; inset: 0; transform-style: preserve-3d;
-  transform: rotateY(var(--ry, 0deg)) rotateX(var(--rx, 0deg)); transition: transform .3s ease-out; }
-.m-floor, .m-ceil { position: absolute; left: -55%; right: -55%; height: 46%;
-  background-image: linear-gradient(rgba(29, 111, 224, .13) 1.5px, transparent 1.5px), linear-gradient(90deg, rgba(29, 111, 224, .13) 1.5px, transparent 1.5px);
-  background-size: 46px 46px; }
-.m-floor { bottom: -6%; transform: rotateX(62deg); transform-origin: bottom;
-  mask-image: linear-gradient(to top, #000, transparent 82%); animation: gridRun 3.4s linear infinite; }
-.m-ceil { top: -6%; transform: rotateX(-62deg); transform-origin: top; opacity: .7;
-  background-image: linear-gradient(rgba(20, 163, 163, .12) 1.5px, transparent 1.5px), linear-gradient(90deg, rgba(20, 163, 163, .12) 1.5px, transparent 1.5px);
-  mask-image: linear-gradient(to bottom, #000, transparent 82%); animation: gridRun 4.6s linear infinite reverse; }
-@keyframes gridRun { to { background-position: 0 46px; } }
-.m-chip { position: absolute; width: var(--s, 52px); aspect-ratio: 1; margin: calc(var(--s, 52px) / -2) 0 0 calc(var(--s, 52px) / -2); will-change: transform; }
-.m-chip > i { display: grid; place-items: center; width: 100%; height: 100%; border-radius: 28%; font-style: normal; font-size: calc(var(--s, 52px) * .52);
-  background: linear-gradient(145deg, rgba(255, 255, 255, .92), color-mix(in srgb, var(--pa, #1D6FE0) 20%, #E8EDF8));
-  border: 1px solid rgba(255, 255, 255, .9);
-  box-shadow: 0 12px 24px -10px color-mix(in srgb, var(--pa, #1D6FE0) 55%, rgba(34, 42, 68, .4)), inset 0 2px 0 rgba(255, 255, 255, .8), inset 0 -3px 0 color-mix(in srgb, var(--pa, #1D6FE0) 22%, transparent);
-  animation: chipBob var(--bd, 5s) ease-in-out infinite; animation-delay: var(--bdel, 0s); }
-@keyframes chipBob { 50% { transform: translateY(-9px) rotate(5deg); } }
-
-@media (max-width: 760px) { .room.walls { display: none; } }
-@media (min-width: 761px) { .room.mobile { display: none; } }
+@media (max-width: 760px) { .room { display: none; } }
 @media (max-width: 640px) {
   .bot { width: 74px; }
   .bot-bubble { font-size: .9rem; }
